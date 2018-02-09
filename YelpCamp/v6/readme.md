@@ -1,49 +1,21 @@
-#Add Mongoose
-* Install and configure Mongoose
-* Setup campground model
-* Use campground model inside of our routes
+## Auth Pt 1 - Install
+* Install all packages needed for authenticate
+* Define User model
 
-# Show Page
-* Review the RESTful routes we've seen so far
-* Add description to our campground model
-* Show db.collection.drop()
-* Add a show route/template
+## Auth Pt.2 - Register
+* Configure Passport
+* Add register routes
+* Add register template
 
+## Auth Pt.3 - Login
+* Add login routes
+* Add login template
 
+## Auth Pt.4 - Logout/Navbar
+* Add logout routes
+* Prevent user from adding a comment if not signed in
+* Add links to navbar
+* show/hide Auth links correctly
 
-# Refactor Mongoose Code
-*   Create a models directory
-*   Use module.exports
-*   Require everything correctly!
-
-
-# Add Seeds File
-* Add a seeds.js file
-* Run the seeds file every time the server starts
-
-# Add the Comment Model!
-* Make our errors go away!
-* Display comments on campground show page
-
-# Comment New/Create
-* Discuss nested routes
-* Add the comment new and create routes
-* Add the new comment form
-
-
-RESTful Routes
-
-name    url         verb    desc
-====================================================================
-INDEX   /dogs       GET     Display a list of all dog
-NEW     /dogs/new   GEt     Displays form to make a new dog
-CREATE  /dogs       POST    Add new dog to DB
-SHOW    /dogs/:id   GET Shows info about one dog
-
-INDEX   /campgrounds
-NEW     /campgrounds/new
-CREATE  /campgrounds
-SHOW    /campgrounds/:id
-
-NEW     campgrounds/:id/comments/new   GET
-Create  campgrounds/:id/comments       POST
+## Auth Pt.5 - Show/Hide Links
+* Show/hide auth links in navbar correctly

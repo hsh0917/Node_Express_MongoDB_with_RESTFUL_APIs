@@ -2,18 +2,37 @@ var express     = require("express"),
     app         = express(),
     bodyParser  = require("body-parser"),
     mongoose    = require("mongoose"),
+    passport    = require("passport"),
+    LocalStrategy = require("passport-local"),
     Campground  = require("./models/campground"),
     seedDB      = require("./seeds"),
+    User        = require("./models/user"),
     Comment     = require("./models/comment");
 
 
-mongoose.connect("mongodb://localhost/yelp_camp_3");
+mongoose.connect("mongodb://localhost/yelp_camp_6");
 app.use(bodyParser.urlencoded({extended : true}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 console.log(__dirname + "public");
 seedDB();
 
+// PASSPORT CONFIGURATION
+app.use(require("express-session")({
+    secret: "Once again Rusty wins cutest dog!",
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.use(function(req, res, next){      // This will be called on every route. What this does is pass that request at user to every single template and there an easy way
+    res.locals.currentUser = req.user; // whenever we put in the res.locals is what's available instead of our templates.
+    next();                            // we need to have the next() in order to move on to that next middleware which will actually be the route handler in most cases.
+})
 
 app.get("/", function(req, res){
     res.render("landing");
@@ -76,7 +95,7 @@ app.get("/campgrounds/:id", function(req,res){
 //  COMMENTS ROUTES
 //  ===============================
 
-app.get("/campgrounds/:id/comments/new", function(req, res) {
+app.get("/campgrounds/:id/comments/new", isLoggedIn, function(req, res) {
     // find campground by id
     Campground.findById(req.params.id, function(err, campground){
         if(err){
@@ -87,7 +106,7 @@ app.get("/campgrounds/:id/comments/new", function(req, res) {
     });
 });
 
-app.post("/campgrounds/:id/comments", function(req, res){
+app.post("/campgrounds/:id/comments", isLoggedIn, function(req, res){
     ///lookup campground using ID
     Campground.findById(req.params.id, function(err, campground){
         if(err){
@@ -110,6 +129,54 @@ app.post("/campgrounds/:id/comments", function(req, res){
     //redirect campground show page
 })
 
+
+// ==========
+// AUTH ROUTE
+// ==========
+app.get("/register", function(req, res) {
+    res.render("register");
+})
+
+//handle sign up logic
+app.post("/register", function(req, res) {
+    var newUser = new User({username:req.body.username});
+    var password = req.body.password;
+    User.register(newUser, password, function(err,user){
+        if(err){
+            console.log(err);
+            res.render("register");
+        }
+        passport.authenticate("local")(req, res, function(){
+            res.redirect("/campgrounds");
+        })
+    });
+})
+
+// Show login form
+app.get("/login", function(req, res) {
+    res.render("login");
+});
+
+// Handling login logic
+app.post("/login", passport.authenticate("local", {   // app.post("login", middleware, callback)
+    successRedirect: "/campgrounds",
+    failureRedirect: "/login"
+    }), function(req, res) {
+    res.send("Login happens here");
+});
+
+// login route
+app.get("/logout", function(req, res) {
+    req.logout();
+    res.redirect("/campgrounds");
+});
+
+function isLoggedIn(req, res, next){
+    if(req.isAuthenticated()){
+        return next();
+    }
+    res.redirect("/login");
+}
 
 app.listen(process.env.PORT, process.env.IP, function(){
     console.log("The YelpCamp server has started!");
