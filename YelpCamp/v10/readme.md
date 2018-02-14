@@ -45,7 +45,13 @@
 * Add Destroy Routes
 * Add Delete button
 
-## Authorization
+## Authorization 
 * User can only edit his/her campgrounds
 * User can only delete his/her campgrounds
 * Hide/Show edit and delete buttons
+
+## Authorization Part 2: Comments
+* User can only edit his/her comments
+* User can only delete his/her comments
+* Hide/Show edit and delete buttons
+* Refactor Middleware
