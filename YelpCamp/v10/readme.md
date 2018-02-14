@@ -38,6 +38,9 @@
 * Add Update Route
 * Fix $set problem  
 
+/campgrounds/:id/edit
+/campgrounds/:id/comments/:comment_id/edit
+
 ## Deleting campgrounds
 * Add Destroy Routes
 * Add Delete button
