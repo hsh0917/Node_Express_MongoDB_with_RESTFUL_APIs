@@ -34,4 +34,4 @@ heroku config:set SESSION_SECRET='Whatever phrase you choose'
 
 # Deployed
 
-The app is deployed [here](https://lit-lake-99427.herokuapp.com/) at Heroku (also using [MongoLab](http://mlab.com)).
+The app is deployed [here](https://protected-falls-24808.herokuapp.com) at Heroku (also using [MongoLab](http://mlab.com)).
